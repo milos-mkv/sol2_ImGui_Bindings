@@ -1,7 +1,7 @@
 #pragma once
-#include "../ImGui//imgui.h"
+#include <imgui.h>
 #include <string>
-#include "sol.hpp"
+#include <sol/sol.hpp>
 
 namespace sol_ImGui
 {
@@ -92,7 +92,7 @@ namespace sol_ImGui
 	inline std::tuple<float, float> GetContentRegionAvail()												{ const auto vec2{ ImGui::GetContentRegionAvail() };  return std::make_tuple(vec2.x, vec2.y); }
 	inline std::tuple<float, float> GetWindowContentRegionMin()											{ const auto vec2{ ImGui::GetWindowContentRegionMin() };  return std::make_tuple(vec2.x, vec2.y); }
 	inline std::tuple<float, float> GetWindowContentRegionMax()											{ const auto vec2{ ImGui::GetWindowContentRegionMax() };  return std::make_tuple(vec2.x, vec2.y); }
-	inline float GetWindowContentRegionWidth()															{ return ImGui::GetWindowContentRegionWidth(); }
+	inline float GetWindowContentRegionWidth()															{ return ImGui::GetWindowContentRegionMax().x - ImGui::GetWindowContentRegionMin().x; }
 
 	// Windows Scrolling
 	inline float GetScrollX()																			{ return ImGui::GetScrollX(); }
@@ -1457,9 +1457,9 @@ namespace sol_ImGui
 	inline void EndPopup()																				{ ImGui::EndPopup(); }
 	inline void OpenPopup(const std::string& str_id)													{ ImGui::OpenPopup(str_id.c_str()); }
 	inline void OpenPopup(const std::string& str_id, int popup_flags)									{ ImGui::OpenPopup(str_id.c_str(), static_cast<ImGuiPopupFlags>(popup_flags)); }
-	inline bool OpenPopupContextItem()																	{ return ImGui::OpenPopupContextItem(); }
-	inline bool OpenPopupContextItem(const std::string& str_id)											{ return ImGui::OpenPopupContextItem(str_id.c_str()); }
-	inline bool OpenPopupContextItem(const std::string& str_id, int popup_flags)						{ return ImGui::OpenPopupContextItem(str_id.c_str(), static_cast<ImGuiPopupFlags>(popup_flags)); }
+	// inline bool OpenPopupContextItem()																	{ return ImGui::OpenPopupContextItem(); }
+	// inline bool OpenPopupContextItem(const std::string& str_id)											{ return ImGui::OpenPopupContextItem(str_id.c_str()); }
+	// inline bool OpenPopupContextItem(const std::string& str_id, int popup_flags)						{ return ImGui::OpenPopupContextItem(str_id.c_str(), static_cast<ImGuiPopupFlags>(popup_flags)); }
 	inline void CloseCurrentPopup()																		{ ImGui::CloseCurrentPopup(); }
 	inline bool BeginPopupContextItem()																	{ return ImGui::BeginPopupContextItem(); }
 	inline bool BeginPopupContextItem(const std::string& str_id)										{ return ImGui::BeginPopupContextItem(str_id.c_str()); }
@@ -1608,11 +1608,11 @@ namespace sol_ImGui
 
 	// Inputs Utilities: Keyboard
 	inline int GetKeyIndex(int imgui_key)																{ return ImGui::GetKeyIndex(static_cast<ImGuiKey>(imgui_key)); }
-	inline bool IsKeyDown(int user_key_index)															{ return ImGui::IsKeyDown(user_key_index); }
-	inline bool IsKeyPressed(int user_key_index)														{ return ImGui::IsKeyPressed(user_key_index); }
-	inline bool IsKeyPressed(int user_key_index, bool repeat)											{ return ImGui::IsKeyPressed(user_key_index, repeat); }
-	inline bool IsKeyReleased(int user_key_index)														{ return ImGui::IsKeyReleased(user_key_index); }
-	inline int GetKeyPressedAmount(int key_index, float repeat_delay, float rate)						{ return ImGui::GetKeyPressedAmount(key_index, repeat_delay, rate); }
+	inline bool IsKeyDown(int user_key_index)															{ return ImGui::IsKeyDown((ImGuiKey)user_key_index); }
+	inline bool IsKeyPressed(int user_key_index)														{ return ImGui::IsKeyPressed((ImGuiKey)user_key_index); }
+	inline bool IsKeyPressed(int user_key_index, bool repeat)											{ return ImGui::IsKeyPressed((ImGuiKey)user_key_index, repeat); }
+	inline bool IsKeyReleased(int user_key_index)														{ return ImGui::IsKeyReleased((ImGuiKey)user_key_index); }
+	inline int GetKeyPressedAmount(int key_index, float repeat_delay, float rate)						{ return ImGui::GetKeyPressedAmount((ImGuiKey)key_index, repeat_delay, rate); }
 	inline void CaptureKeyboardFromApp()																{ ImGui::CaptureKeyboardFromApp(); }
 	inline void CaptureKeyboardFromApp(bool want_capture_keyboard_value)								{ ImGui::CaptureKeyboardFromApp(want_capture_keyboard_value); }
 
@@ -1807,7 +1807,7 @@ namespace sol_ImGui
 			"GrabMinSize"				, ImGuiStyleVar_GrabMinSize,
 			"GrabRounding"				, ImGuiStyleVar_GrabRounding,
 			"TabRounding"				, ImGuiStyleVar_TabRounding,
-			"SelectableRounding"		, ImGuiStyleVar_SelectableRounding,
+			// "SelectableRounding"		, ImGuiStyleVar_SelectableRounding,
 			"SelectableTextAlign"		, ImGuiStyleVar_SelectableTextAlign,
 			"ButtonTextAlign"			, ImGuiStyleVar_ButtonTextAlign,
 			"COUNT"						, ImGuiStyleVar_COUNT
@@ -1855,7 +1855,7 @@ namespace sol_ImGui
 			"AllowTabInput"			, ImGuiInputTextFlags_AllowTabInput,
 			"CtrlEnterForNewLine"	, ImGuiInputTextFlags_CtrlEnterForNewLine,
 			"NoHorizontalScroll"	, ImGuiInputTextFlags_NoHorizontalScroll,
-			"AlwaysInsertMode"		, ImGuiInputTextFlags_AlwaysInsertMode,
+			// "AlwaysInsertMode"		, ImGuiInputTextFlags_AlwaysInsertMode,
 			"ReadOnly"				, ImGuiInputTextFlags_ReadOnly,
 			"Password"				, ImGuiInputTextFlags_Password,
 			"NoUndoRedo"			, ImGuiInputTextFlags_NoUndoRedo,
@@ -1892,16 +1892,16 @@ namespace sol_ImGui
 			"PickerHueBar"			, ImGuiColorEditFlags_PickerHueBar,
 			"PickerHueWheel"		, ImGuiColorEditFlags_PickerHueWheel,
 			"InputRGB"				, ImGuiColorEditFlags_InputRGB,
-			"InputHSV"				, ImGuiColorEditFlags_InputHSV,
+			"InputHSV"				, ImGuiColorEditFlags_InputHSV
 
-			"_OptionsDefault"		, ImGuiColorEditFlags__OptionsDefault,
+			// "_OptionsDefault"		, ImGuiColorEditFlags__OptionsDefault,
 
-			"_DisplayMask"			, ImGuiColorEditFlags__DisplayMask,
-			"_DataTypeMask"			, ImGuiColorEditFlags__DataTypeMask,
-			"_PickerMask"			, ImGuiColorEditFlags__PickerMask,
-			"_InputMask"			, ImGuiColorEditFlags__InputMask,
+			// "_DisplayMask"			, ImGuiColorEditFlags__DisplayMask,
+			// "_DataTypeMask"			, ImGuiColorEditFlags__DataTypeMask,
+			// "_PickerMask"			, ImGuiColorEditFlags__PickerMask,
+			// "_InputMask"			, ImGuiColorEditFlags__InputMask,
 
-			"RGB"					, ImGuiColorEditFlags_RGB
+			// "RGB"					, ImGuiColorEditFlags_RGB
 		);
 #pragma endregion ColorEdit Flags
 
@@ -2018,7 +2018,7 @@ namespace sol_ImGui
 			"Space"							, ImGuiKey_Space,
 			"Enter"							, ImGuiKey_Enter,
 			"Escape"						, ImGuiKey_Escape,
-			"KeyPadEnter"					, ImGuiKey_KeyPadEnter,
+			// "KeyPadEnter"					, ImGuiKey_KeyPadEnter,
 			"A"								, ImGuiKey_A,
 			"C"								, ImGuiKey_C,
 			"V"								, ImGuiKey_V,
@@ -2600,11 +2600,11 @@ namespace sol_ImGui
 																sol::resolve<void(const std::string&)>(OpenPopup),
 																sol::resolve<void(const std::string&, int)>(OpenPopup)
 															));
-		ImGui.set_function("OpenPopupContextItem"			, sol::overload(
-																sol::resolve<bool()>(OpenPopupContextItem),
-																sol::resolve<bool(const std::string&)>(OpenPopupContextItem),
-																sol::resolve<bool(const std::string&, int)>(OpenPopupContextItem)
-															));
+		// ImGui.set_function("OpenPopupContextItem"			, sol::overload(
+		// 														sol::resolve<bool()>(OpenPopupContextItem),
+		// 														sol::resolve<bool(const std::string&)>(OpenPopupContextItem),
+		// 														sol::resolve<bool(const std::string&, int)>(OpenPopupContextItem)
+		// 													));
 		ImGui.set_function("CloseCurrentPopup"				, CloseCurrentPopup);
 		ImGui.set_function("BeginPopupContextItem"			, sol::overload(
 																sol::resolve<bool()>(BeginPopupContextItem),
